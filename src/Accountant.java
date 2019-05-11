@@ -129,14 +129,14 @@ public class Accountant extends Worker {
      * 
      * @param
      */
-	public  int checkPassword() {
+	public  int checkPassword(){
 		String pass = this.password;
 		if (pass == null || pass.length() == 0) return 8;
-		int count = 0;
 		int len = pass.length();
-		boolean hasBig, hasSmall, hasDigit;
+		boolean hasBig=false, hasSmall=false, hasDigit=false;
+		int havenot=3;
+		int modify=0, insert=0, delete=0;
 		ArrayList<String> errorStr = new ArrayList<>();
-		int tmp = 0;
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = pass.charAt(i);
@@ -144,6 +144,18 @@ public class Accountant extends Worker {
 			if (!Character.isLetterOrDigit(c)) {
 				errorStr.add(String.valueOf(c));
 				continue;
+			}
+			if (!hasDigit && Character.isDigit(c)){
+				havenot--;
+				hasDigit=true;
+			}
+			if(!hasBig && Character.isUpperCase(c)){
+				havenot--;
+				hasBig=true;
+			}
+			if (!hasSmall&& Character.isLowerCase(c)){
+				havenot--;
+				hasSmall=true;
 			}
 			//连续字符串
 			int j = i + 1;
@@ -157,10 +169,41 @@ public class Accountant extends Worker {
 			if (j - i >= 3) {//连续三个
 				errorStr.add(pass.substring(i, j));
 				i = j - 1;
-				continue;
 			}
-
 		}
-		return 0;
+		int tmpLen=len;
+		int errorLen;
+		for (String s:errorStr){
+			errorLen=s.length();
+			if(errorLen==0){//特殊字符
+				if (tmpLen<=20){
+					modify++;
+				}else{
+					tmpLen--;
+					delete++;
+				}
+			}else{//重复字符串
+				if (tmpLen<8){
+					tmpLen += (errorLen/2);
+					insert+=(errorLen/2);
+				}else if (tmpLen>20){
+					tmpLen-=(errorLen-2);
+					delete+=(errorLen-2);
+				}else{
+					modify+=(errorLen/3);
+				}
+			}
+		}
+		if (tmpLen>20){
+			delete+=(tmpLen-20);
+		}
+		if(tmpLen<8){
+			insert+=(8-tmpLen);
+		}
+		if (insert+modify<2){
+			modify+=havenot;
+		}
+		return insert+delete+modify;
+
 	}
 }
