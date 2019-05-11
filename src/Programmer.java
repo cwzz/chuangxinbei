@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 
 public class Programmer extends Worker {
 	public String language;
@@ -8,7 +9,10 @@ public class Programmer extends Worker {
 
 	// Programmer类的初始化
 	public Programmer(String name, int age, int salary, String language,
-			String type) {
+			String type) throws IllegalArgumentException{
+		super(name,age,salary,"Programmer");
+		this.language=language;
+		this.type=type;
 	}
 
 	public String getLanguage() {
@@ -28,13 +32,62 @@ public class Programmer extends Worker {
 	}
 
 	// 按照规则计算当月的奖金
-	public String getBonus(int overtime) {
-		return null;
+	public String getBonus(int overtime) throws IllegalArgumentException{
+		if(overtime<0){
+			throw new IllegalArgumentException("Overtime illegal!");
+		}
+		double bonus=0;
+		if(type.equals("Develop")){
+			bonus=salary*0.2;
+			if(overtime>5){
+				bonus+=500;
+			}
+			else{
+				bonus+=(overtime*100);
+			}
+		}
+		else if(type.equals("Test")){
+			bonus=salary*0.15;
+			if(overtime>6){
+				bonus+=1000;
+			}
+			else{
+				bonus+=(overtime*150);
+			}
+		}
+		else if(type.equals("UI")){
+			bonus=salary*0.25;
+			if(overtime>6){
+				bonus+=300;
+			}
+			else{
+				bonus+=(50*overtime);
+			}
+		}
+		DecimalFormat df=new DecimalFormat("#0.00");
+		String format_bonus=df.format(bonus);
+		String prefix=format_bonus.substring(0,format_bonus.length()-3);
+		String result="";
+		int times=0;
+		for(int i=prefix.length()-1;i>=0;i--){
+			times++;
+			result=prefix.charAt(i)+result;
+			if(times%3==0){
+				result=","+result;
+			}
+		}
+
+		if(result.charAt(0)==','){
+			result=result.substring(1);
+		}
+
+		result=result+"."+format_bonus.substring(format_bonus.length()-2);
+		return result;
 	}
 
 	// 展示基本信息
 	public String show() {
-		return null;
+		return "My name is "+name+" ; age : "+age+" ; language : "+language+" ; salary : "+salary+".";
 	}
 
 
@@ -77,7 +130,38 @@ public class Programmer extends Worker {
 	 * @param comment
 	 */
 	public String hideUserinfo(String comment) {
-		return comment;
+		//email
+		if(comment.indexOf("@")!=-1){
+			String str1=comment.substring(0,comment.indexOf("@"));
+			String str2=comment.substring(comment.indexOf("@")+1);
+			str1=str1.toLowerCase();
+			str2=str2.toLowerCase();
+			return str1.charAt(0)+"*****"+str1.charAt(str1.length()-1)+"@"+str2;
+		}
+		//phone
+		else{
+			String phone="";
+			String result="";
+			for(int i=0;i<comment.length();i++){
+				if(comment.charAt(i)<='9'&&comment.charAt(i)>='0'){
+					phone+=comment.charAt(i);
+				}
+			}
+			if(phone.length()<10){
+				result="illegal";
+			}
+			else if(phone.length()==10){
+				result="***-***-"+phone.substring(6);
+			}
+			else{
+				result="+";
+				for(int i=0;i<phone.length()-10;i++){
+					result+="*";
+				}
+				result=result+"-***-***-"+phone.substring(phone.length()-4);
+			}
+			return result;
+		}
 	}
 
 }
