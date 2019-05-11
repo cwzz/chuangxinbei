@@ -2,6 +2,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Editor extends Worker {
@@ -12,7 +13,7 @@ public class Editor extends Worker {
 
     //初始化Editor
     public Editor(String name, int age, int salary) {
-
+        super(name,age,salary,"Editor");
     }
 
     /**
@@ -108,8 +109,47 @@ public class Editor extends Worker {
      * @param newsContent
      */
     public String findHotWords(String newsContent){
-        return newsContent;
+        String[] chineseWords=newsContent.split(" |，|。|？|！|；|：|、");
+        ArrayList<String> englishWords=new ArrayList<>();
+        HashMap<String,Integer> chineseMap=new HashMap<>();
+        HashMap<String,Integer> chinesePos=new HashMap<>();
+        HashMap<String,Integer> englishMap=new HashMap<>();
+        HashMap<String,Integer> englishPos=new HashMap<>();
+        StringBuilder tempWord;
+        int i=0;
+        while (i<newsContent.length()){
+            if(newsContent.charAt(i)>='a'&&newsContent.charAt(i)<='z'||newsContent.charAt(i)>='A'&&newsContent.charAt(i)<='Z'){
+                tempWord=new StringBuilder(newsContent.charAt(i)+"");
+                int j=i+1;
+                while (newsContent.charAt(j)>='a'&&newsContent.charAt(j)<='z'||newsContent.charAt(j)>='A'&&newsContent.charAt(j)<='Z'){
+                    tempWord.append(newsContent.charAt(j));
+                    j++;
+                }
+                englishWords.add(tempWord.toString());
+                if(!englishPos.containsKey(tempWord.toString()))
+                    englishPos.put(tempWord.toString(),i);
+                tempWord.delete(0,tempWord.length());
+                i=j+1;
+            }else{
+                i++;
+            }
+        }
+        for(int k=0;k<englishWords.size();k++){
+            if(englishMap.containsKey(englishWords.get(k)))
+                englishMap.put(englishWords.get(k),englishMap.get(englishWords.get(k))+1);
+            else
+                englishMap.put(englishWords.get(k),1);
+        }
+        for(int len=2;len<=10;len++) {
+            for (int k = 0; k < chineseWords.length; k++) {
+                if(chineseWords.length<len)
+                    continue;
+                else{
 
+                }
+            }
+        }
+        return newsContent;
     }
 
     /**
@@ -158,6 +198,6 @@ public class Editor extends Worker {
 
     public static void main(String[] args){
         Editor editor=new Editor();
-        editor.minDistance("中国队是冠军","我们是冠军");
+        editor.findHotWords("今天的中国，呈现给世界的不仅有波澜壮阔的改革发展图景，更有一以贯之的平安祥和稳定。这平安祥和稳定的背后，凝聚着中国治国理政的卓越智慧，也凝结着中国公安民警的辛勤奉献。");
     }
 }
