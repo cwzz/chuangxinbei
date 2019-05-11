@@ -9,98 +9,104 @@ public class Accountant extends Worker {
 	
 	//初始化Accountant
 	public Accountant(String name, int age, int salary, String password) {
-		super(name,age,salary,password);
+		super(name,age,salary,"Accountant");
 		this.password=password;
 	}
-	
-    /**
-     * 数字转换
-     * 随着公司业务的开展，国际性业务也有相应的拓宽，
-     * 会计们需要一个自动将数字转换为英文显示的功能。
-     * 编辑们希望有一种简约的方法能将数字直接转化为数字的英文显示。
-     * 
-     * 给定一个非负整数型输入，将数字转化成对应的英文显示，省略介词and
-     * 正常输入为非负整数，且输入小于2^31-1;
-     * 如果有非法输入（字母，负数，范围溢出等），返回illegal
-     * 
-     * 示例：
-     * 
-     * number: 2,132,866,842
-     * return: "Two Billion one Hundred Thirty Two Million Eight Hundred Sixty Six Thousand Eight Hundred Forty Two"
-     *
-     * number：-1
-     * return："illegal"
-     * @param number
-     */
-    public  String numberToWords (String number){
-    	int length=number.length();
 
-		return password;
-
-    }
-
-    private String transThreeInt(String num){
-    	String res="";
-    	if(num.length()==3){
-    		res=res+transInteger(num.charAt(0))+" Hundred"+transTenInt(num.charAt(1))+" "+transInteger(num.charAt(2));
-		}else if(num.length()==2){
-			res=transTenInt(num.charAt(0))+" "+transInteger(num.charAt(1));
+	/**
+	 * 数字转换
+	 * 随着公司业务的开展，国际性业务也有相应的拓宽，
+	 * 会计们需要一个自动将数字转换为英文显示的功能。
+	 * 编辑们希望有一种简约的方法能将数字直接转化为数字的英文显示。
+	 *
+	 * 给定一个非负整数型输入，将数字转化成对应的英文显示，省略介词and
+	 * 正常输入为非负整数，且输入小于2^31-1;
+	 * 如果有非法输入（字母，负数，范围溢出等），返回illegal
+	 *
+	 * 示例：
+	 *
+	 * number: 2132866842
+	 * return: "Two Billion one Hundred Thirty Two Million Eight Hundred Sixty Six Thousand Eight Hundred Forty Two"
+	 *
+	 * number：-1
+	 * return："illegal"
+	 * @param number
+	 */
+	public  String numberToWords (String number){
+		if(number.equals("0")){
+			return "Zero";
 		}
-    	return res;
+
+		//字母
+		for(int i=0;i<number.length();i++){
+			if(!(number.charAt(i)>='0'&&number.charAt(i)<='9')){
+				return "illegal";
+			}
+		}
+
+		try{
+			int temp=Integer.valueOf(number);
+			//负数
+			if(temp<0){
+				return "illegal";
+			}else{
+				String result=transToWords(temp);
+				return result;
+			}
+		}catch (Exception e){
+			//溢出
+			return "illegal";
+		}
+
 	}
 
-	private String transTenInt(char num){
-		switch (num){
-			case '0':
-				return "";
-			case '1':
-				return "ten";
-			case '2':
-				return "twenty";
-			case '3':
-				return "thirty";
-			case '4':
-				return "forty";
-			case '5':
-				return "fifty";
-			case '6':
-				return "sixty";
-			case '7':
-				return "seventy";
-			case '8':
-				return "eighty";
-			case '9':
-				return "ninety";
-			default:
-				return "error";
+
+	public String transToWords(int num) {
+		if(num == 0) {
+			return "Zero";
 		}
+		String result = "";
+		if(num > 999999999){
+			result =result+transThreeInt(num/1000000000) + " Billion";
+			num %= 1000000000;
+		}
+		if(num > 999999){
+			result =result+ transThreeInt(num/1000000) + " Million";
+			num %= 1000000;
+		}
+		if(num > 999){
+			result =result+ transThreeInt(num/1000) + " Thousand";
+			num %= 1000;
+		}
+		if(num > 0){
+			result =result+ transThreeInt(num);
+		}
+		return result.trim();
 	}
 
-    private String transInteger(char num){
-    	switch (num){
-			case '0':
-				return "zero";
-			case '1':
-				return "one";
-			case '2':
-				return "two";
-			case '3':
-				return "three";
-			case '4':
-				return "four";
-			case '5':
-				return "five";
-			case '6':
-				return "six";
-			case '7':
-				return "seven";
-			case '8':
-				return "eight";
-			case '9':
-				return "nine";
-			default:
-				return "error";
+
+
+	private String transThreeInt(int num){
+		String oneToNine[] = new String[]{ "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };
+		String tenToNineteen[] = new String[]{ "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
+		String tenToNinety[] = new String[]{ "Ten","Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
+
+		String result = "";
+		if(num > 99){
+			result += " " + oneToNine[num / 100 - 1] + " Hundred";
 		}
+		num %= 100;
+		if(num>19){
+			result += " " + tenToNinety[num / 10 - 1];
+			num %= 10;
+		}else if(num>9){
+			result += " " + tenToNineteen[num - 10];
+			num = 0;
+		}
+		if(num > 0){
+			result += " " + oneToNine[num-1];
+		}
+		return result;
 	}
     
     /**

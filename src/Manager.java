@@ -19,7 +19,7 @@ public class Manager extends Worker {
 		if(e.getDepartment().equals(this.department)){
 			return e.show();
 		}else{
-			return "Access Denied!";
+			throw new IllegalArgumentException("Access denied!");
 		}
 	}
 
@@ -38,9 +38,13 @@ public class Manager extends Worker {
 		if(worker.size()==0){
 			return "Empty";
 		}else{
-			String res="";
+			String res="Statement for a\n";
 			for(int i=0;i<worker.size();i++){
-				res=res+" "+worker.get(i).getName();
+				if(i==worker.size()-1){
+					res=res+" - "+worker.get(i).getName();
+				}else{
+					res=res+" - "+worker.get(i).getName()+"\n";
+				}
 			}
 			return res;
 		}
