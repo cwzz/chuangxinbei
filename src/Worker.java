@@ -55,6 +55,6 @@ public class Worker {
 	public String show() {
 		//My name is a ; age : 19 ; salary : 10000 ; department : Programmer.
 		return  "My name is " + this.name + " ; age : " + this.age +
-				" ;salary : " + this.salary + " ; department : " + this.department;
+				" ; salary : " + this.salary + " ; department : " + this.department+".";
 	}
 }

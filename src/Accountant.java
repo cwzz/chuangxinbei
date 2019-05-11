@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Accountant extends Worker {
 	public String password;
@@ -120,10 +121,40 @@ public class Accountant extends Worker {
      * password: HelloWorld
      * return: 1
      * 
-     * @param password
+     * @param
      */
-    public  int checkPassword(){
-		return 0;
+	public  int checkPassword() {
+		String pass = this.password;
+		if (pass == null || pass.length() == 0) return 8;
+		int count = 0;
+		int len = pass.length();
+		boolean hasBig, hasSmall, hasDigit;
+		ArrayList<String> errorStr = new ArrayList<>();
+		int tmp = 0;
+		char c;
+		for (int i = 0; i < len; i++) {
+			c = pass.charAt(i);
+			//特殊字符
+			if (!Character.isLetterOrDigit(c)) {
+				errorStr.add(String.valueOf(c));
+				continue;
+			}
+			//连续字符串
+			int j = i + 1;
+			while (j < len) {
+				if (pass.charAt(j) == c) {
+					j++;
+				} else {
+					break;
+				}
+			}
+			if (j - i >= 3) {//连续三个
+				errorStr.add(pass.substring(i, j));
+				i = j - 1;
+				continue;
+			}
 
-    }
+		}
+		return 0;
+	}
 }
