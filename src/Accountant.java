@@ -8,7 +8,8 @@ public class Accountant extends Worker {
 	
 	//初始化Accountant
 	public Accountant(String name, int age, int salary, String password) {
-
+		super(name,age,salary,password);
+		this.password=password;
 	}
 	
     /**
@@ -23,7 +24,7 @@ public class Accountant extends Worker {
      * 
      * 示例：
      * 
-     * number: 2132866842
+     * number: 2,132,866,842
      * return: "Two Billion one Hundred Thirty Two Million Eight Hundred Sixty Six Thousand Eight Hundred Forty Two"
      *
      * number：-1
@@ -31,9 +32,75 @@ public class Accountant extends Worker {
      * @param number
      */
     public  String numberToWords (String number){
+    	int length=number.length();
+
 		return password;
 
     }
+
+    private String transThreeInt(String num){
+    	String res="";
+    	if(num.length()==3){
+    		res=res+transInteger(num.charAt(0))+" Hundred"+transTenInt(num.charAt(1))+" "+transInteger(num.charAt(2));
+		}else if(num.length()==2){
+			res=transTenInt(num.charAt(0))+" "+transInteger(num.charAt(1));
+		}
+    	return res;
+	}
+
+	private String transTenInt(char num){
+		switch (num){
+			case '0':
+				return "";
+			case '1':
+				return "ten";
+			case '2':
+				return "twenty";
+			case '3':
+				return "thirty";
+			case '4':
+				return "forty";
+			case '5':
+				return "fifty";
+			case '6':
+				return "sixty";
+			case '7':
+				return "seventy";
+			case '8':
+				return "eighty";
+			case '9':
+				return "ninety";
+			default:
+				return "error";
+		}
+	}
+
+    private String transInteger(char num){
+    	switch (num){
+			case '0':
+				return "zero";
+			case '1':
+				return "one";
+			case '2':
+				return "two";
+			case '3':
+				return "three";
+			case '4':
+				return "four";
+			case '5':
+				return "five";
+			case '6':
+				return "six";
+			case '7':
+				return "seven";
+			case '8':
+				return "eight";
+			case '9':
+				return "nine";
+			default:
+				return "error";
+		}
+	}
     
     /**
      * 检验密码
