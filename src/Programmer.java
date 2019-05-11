@@ -65,7 +65,24 @@ public class Programmer extends Worker {
 			}
 		}
 		DecimalFormat df=new DecimalFormat("#0.00");
-		return df.format(bonus);
+		String format_bonus=df.format(bonus);
+		String prefix=format_bonus.substring(0,format_bonus.length()-3);
+		String result="";
+		int times=0;
+		for(int i=prefix.length()-1;i>=0;i--){
+			times++;
+			result=prefix.charAt(i)+result;
+			if(times%3==0){
+				result=","+result;
+			}
+		}
+
+		if(result.charAt(0)==','){
+			result=result.substring(1);
+		}
+
+		result=result+"."+format_bonus.substring(format_bonus.length()-2);
+		return result;
 	}
 
 	// 展示基本信息
