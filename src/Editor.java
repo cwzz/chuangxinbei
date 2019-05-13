@@ -192,7 +192,7 @@ public class Editor extends Worker {
             }
         }
         double result=(1-dp[title1.length()-1][title2.length()-1]/Math.max((double)title1.length(),(double)title2.length()))*100;
-        BigDecimal bg = new BigDecimal(result).setScale(2, RoundingMode.UP);
+        BigDecimal bg = new BigDecimal(result).setScale(2, RoundingMode.DOWN);
         return bg.doubleValue();
     }
 
